@@ -1,0 +1,140 @@
+-- Create Mechanics Table
+CREATE TABLE Mechanics (
+    MechanicID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    ContactInfo VARCHAR(100),
+    Specialty VARCHAR(50),
+    ExperienceYears VARCHAR(20)
+);
+
+-- Create Services Table
+CREATE TABLE Services (
+    ServiceID INT PRIMARY KEY,
+    ServiceName VARCHAR(100),
+    Description TEXT,
+    Price DECIMAL(10, 2)
+);
+
+-- Create Inventory Table
+CREATE TABLE Inventory (
+    PartID VARCHAR(50) PRIMARY KEY,
+    PartName VARCHAR(100),
+    PartDescription TEXT,
+    QuantityInStock INT,
+    PricePerUnit DECIMAL(10, 2)
+);
+
+-- Create MotorServiceRecords Table (for reference in ServiceHistory)
+CREATE TABLE MotorServiceRecords (
+    RecordID INT PRIMARY KEY,
+    Brand VARCHAR(50),
+    ModelType VARCHAR(50),
+    CustomerName VARCHAR(100),
+    MotorProblems TEXT,
+    PlateNumber VARCHAR(15) UNIQUE,
+    AppointmentDate DATE
+);
+
+-- Create ServiceHistory Table
+CREATE TABLE ServiceHistory (
+    ServiceHistoryID INT PRIMARY KEY,
+    VehicleID INT,
+    ServiceID INT,
+    MechanicID INT,
+    ServiceDate DATE,
+    Notes TEXT,
+    FOREIGN KEY (VehicleID) REFERENCES MotorServiceRecords(RecordID),
+    FOREIGN KEY (ServiceID) REFERENCES Services(ServiceID),
+    FOREIGN KEY (MechanicID) REFERENCES Mechanics(MechanicID)
+);
+
+-- Create Payments Table
+CREATE TABLE Payments (
+    PaymentID INT PRIMARY KEY,
+    RecordID INT,
+    AmountPaid DECIMAL(10, 2),
+    PaymentDate DATE,
+    PaymentMethod VARCHAR(50),
+    FOREIGN KEY (RecordID) REFERENCES MotorServiceRecords(RecordID)
+);
+
+-- Insert Data into Mechanics Table
+INSERT INTO Mechanics (MechanicID, Name, ContactInfo, Specialty, ExperienceYears)
+VALUES 
+(1, 'Alex Briggs', '09223981521', 'General Mechanic', '20-25 years'),
+(2, 'Brent Stephens', '09246864325', 'Engine Specialist', '20-25 years'),
+(3, 'Erik Buell', '09718263220', 'CVT Expert', '40 years'),
+(4, 'Shinya Kimura', '09461843998', 'Powder Coating Specialist', '25-30 years'),
+(5, 'Jeremy Burgess', '09937521732', 'Front and Rear Shocks Specialist', '40-50 years'),
+(6, 'Soichiro Honda', '09752653287', 'Tire Expert', '30-40 years');
+
+-- Insert Data into Services Table
+INSERT INTO Services (ServiceID, ServiceName, Description, Price)
+VALUES 
+(1, 'Change Oil', 'Engine Care Starts with Fresh Oil', 320.00),
+(2, 'CVT Cleaning', 'Mastering the Art of CVT Performance', 350.00),
+(3, 'Change Tires', 'Safe Tires, Safe Travels!', 1250.00),
+(4, 'Powder Coating', 'Durable Coating, Stunning Looks!', 2500.00),
+(5, 'Bore Up Engine', 'Unlock Power, Unleash Performance', 15000.00),
+(6, 'Speedometer Cable', 'Keep Your Speed in Check', 300.00),
+(7, 'Magic Lowered', 'Where Precision Meets Performance', 800.00);
+
+-- Insert Data into Inventory Table
+INSERT INTO Inventory (PartID, PartName, PartDescription, QuantityInStock, PricePerUnit)
+VALUES 
+('MO-10W40-2023-001', 'Engine Oil', 'High-performance engine oil', 1098, 300.00),
+('PWC-CVT-SPRAY-1500-2023', 'CVT Cleaner Spray', 'Power Cleaner of CVT', 523, 190.00),
+('SPD-CBL-2023-001', 'Speedometer Cable', 'Cable for Speedo', 264, 250.00),
+('MGO-80W90-2023-001', 'Gear Oil', 'High-performance gear oil', 1039, 110.00),
+('TUB-MOTO-120-70-17-2023-001', 'Tubeless Tire', 'Durability of Tires', 317, 1250.00);
+
+-- Insert Data into MotorServiceRecords Table
+INSERT INTO MotorServiceRecords (RecordID, Brand, ModelType, CustomerName, MotorProblems, PlateNumber, AppointmentDate)
+VALUES
+(1, 'Yamaha', 'Mio I 125', 'Kyle Nicolas', 'Change Oil', 'TNG 225', '2024-10-22'),
+(2, 'Honda', 'PCX', 'Gerald Ybanez', 'CVT Cleaning', 'DCK 512', '2024-11-04'),
+(3, 'Suzuki', 'Dio', 'Sam Esita', 'Change Tires', 'BKL 934', '2024-10-28'),
+(4, 'Yamaha', 'M3', 'Ryan Santos', 'Powder Coating of Fairings', 'GIP 739', '2024-09-03'),
+(5, 'Yamaha', 'NMAX v2', 'Marcross Amaba', 'Bore Up Engine', 'TTE 364', '2024-08-15'),
+(6, 'Yamaha', 'Mio Soul I 125', 'Kim Samin', 'Speedometer Cable', 'KPL 420', '2024-06-30'),
+(7, 'Suzuki', 'Raider FI', 'Ken Sauro', 'Magic Lowered', 'BBR 869', '2024-07-07');
+
+-- Insert Data into ServiceHistory Table
+INSERT INTO ServiceHistory (ServiceHistoryID, VehicleID, ServiceID, MechanicID, ServiceDate, Notes)
+VALUES 
+(1, 1, 1, 1, '2024-10-22', 'Performed oil change'),
+(2, 2, 2, 3, '2024-11-04', 'Performed CVT Cleaning'), 
+(3, 3, 3, 6, '2024-10-28', 'Changing of Tires'), 
+(4, 4, 4, 4, '2024-09-03', 'Powder Coating of Fairings'), 
+(5, 5, 5, 2, '2024-08-15', 'Bore Up of Engine'), 
+(6, 6, 6, 1, '2024-06-30', 'Repairing Speedometer'), 
+(7, 7, 7, 5, '2024-07-07', 'Lowering the suspension');
+
+-- Insert Data into Payments Table
+INSERT INTO Payments (PaymentID, RecordID, AmountPaid, PaymentDate, PaymentMethod)
+VALUES 
+(1, 1, 300.00, '2024-10-22', 'Cash'),
+(2, 2, 350.00, '2024-11-04', 'Debit Card'),
+(3, 3, 2500.00, '2024-10-28', 'Cash'),
+(4, 4, 2500.00, '2024-09-03', 'Gcash'),
+(5, 5, 15000.00, '2024-08-15', 'Gcash'),
+(6, 6, 300.00, '2024-06-30', 'Debit Card'),
+(7, 7, 800.00, '2024-07-07', 'Cash');
+
+-- Query to View Mechanics Table
+SELECT * FROM Mechanics;
+
+-- Query to View Services Table
+SELECT * FROM Services;
+
+-- Query to View Inventory Table
+SELECT * FROM Inventory;
+
+-- Query to View MotorServiceRecords Table
+SELECT * FROM MotorServiceRecords;
+
+-- Query to View ServiceHistory Table
+SELECT * FROM ServiceHistory;
+
+-- Query to View Payments Table
+SELECT * FROM Payments;
